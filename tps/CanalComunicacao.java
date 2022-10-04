@@ -50,6 +50,7 @@ public class CanalComunicacao {
         //mapeia para memória o conteúdo do ficheiro
         try {
             buffer = canal.map(FileChannel.MapMode.READ_WRITE, 0, BUFFER_MAX);
+
         } catch (IOException e) {
             return false;
         }
