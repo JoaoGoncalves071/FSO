@@ -2,6 +2,7 @@ package tps;
 
 public class Mensagem {
     private int ID;
+
     private int tipo;
 
     private static final int TypeReta = 1;
