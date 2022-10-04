@@ -1,10 +1,13 @@
 package tps;
 
 public abstract class Mensagem {
+
+    // variables
     public int num;
     public int type;
     public String text;
 
+    // number
     public int getNum(){
         return this.num;
     }
@@ -12,6 +15,7 @@ public abstract class Mensagem {
         this.num = num;
     }
 
+    // message type
     public int getType() {
         return type;
     }
@@ -19,6 +23,7 @@ public abstract class Mensagem {
         this.type = type;
     }
 
+    // message text
     public String getText() {
         return text;
     }
