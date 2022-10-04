@@ -1,6 +1,6 @@
 package tps;
 
-public class Mensagem {
+public abstract class Mensagem {
     private int ID;
 
     private int tipo;
