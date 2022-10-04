@@ -1,4 +1,5 @@
 package tps;
 
-public interface Mensagem {
+public abstract class Mensagem {
+    public int num;
 }
