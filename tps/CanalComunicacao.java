@@ -20,6 +20,13 @@ public class CanalComunicacao {
     // dimensão máxima em bytes do buffer
     final int BUFFER_MAX = 30;
 
+    // Variáveis auxiliares ao ID
+    private int currentID;
+    private int lastID;
+
+    // Indica se se pode escrever
+    private boolean canWrite;
+
     // construtor onde se cria o canal
     public CanalComunicacao() {
 
@@ -76,14 +83,41 @@ public class CanalComunicacao {
     /*
      * envia uma String como mensagem
      */
-    public void enviarMensagem(String msg) {
-        char c;
-        buffer.position(0);
-        for (int i = 0; i < msg.length(); ++i) {
-            c = msg.charAt(i);
-            buffer.putChar(c);
+    public void enviarMensagem(Mensagem msg) {
+        try{
+            // Agora vamos obter as várias informações que temos de escrever no buffer - o tipo, o texto, e o ID
+            int tipo = msg.getType();
+            int[] texto = msg.obterMensagem();
+            currentID++;
+            msg.setID(currentID);
+
+            // As mensagens têm de ficar à espera, de forma ordenada, enquanto a mensagem previamente escrita ainda não tiver sido lida
+            // usa-se um Thread.sleep até se ler 'r' no buffer. A primeira a sair corresponde à que incrementa de 1 ID da ùltima mensagem no buffer
+            while (!canWrite || !(msg.getID() == lastID + 1)) {
+
+
+                buffer.position(0);
+                if (buffer.getChar() == 'r')
+                    canWrite = true;
+                lastID = buffer.getInt();
+
+                Thread.sleep(1);
+            }
+
+            char c;
+            buffer.position(0);
+            buffer.putInt(msg.getID());
+            lastID = msg.getID();
+
+            for (int i = 0; i < texto.length; ++i) {
+                c = msg.charAt(i);
+                buffer.putChar(c);
+            }
+            buffer.putChar('\0');
+            System.out.println("Mensagem Enviada -> " + msg.toString());
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        buffer.putChar('\0');
     }
 
     /*
