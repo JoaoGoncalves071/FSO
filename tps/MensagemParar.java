@@ -35,7 +35,7 @@ public class MensagemParar extends Mensagem {
 
     @Override
     public int[] obterMensagem() {
-        return new int[]{getIDMensagem(), getType(), getValor(), 0};
+        return new int[]{getID(), getType(), getValor(), 0};
     }
 
 

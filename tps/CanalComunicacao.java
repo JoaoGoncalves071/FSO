@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 
 public class CanalComunicacao {
     //ficheiro
@@ -13,6 +14,9 @@ public class CanalComunicacao {
 
     // canal que liga o conteúdo do ficheiro ao buffer
     private FileChannel canal;
+
+    //lock do canal
+    private FileLock lock;
 
     //buffer
     private MappedByteBuffer buffer;
@@ -24,6 +28,9 @@ public class CanalComunicacao {
     private int currentID;
     private int lastID;
 
+    //Indica se o canal foi aberto
+    private boolean open;
+
     // Indica se se pode escrever
     private boolean canWrite;
 
@@ -32,51 +39,64 @@ public class CanalComunicacao {
 
         //Construtor
         ficheiro = null;
+        lock = null;
         canal = null;
         buffer = null;
+        open = false;
 
     }
 
+    /*
+     * Método que retorna o estado do canal
+     */
+    public boolean isOpen() { return open;}
 
     /*
      * Método que abre canal de comunicacao
      */
-
     public boolean abrirCanal() {
-        //cria um ficheiro com o nome comunicacao.dat
+
+        // cria um ficheiro com o nome comunicacao.dat
         ficheiro = new File("comunicacao.dat");
 
-        //cria um canal de comunicação de leitura e escrita, "rw"
+        //cria um canal de comunicação de leitura e escrita
         try {
             canal = new RandomAccessFile(ficheiro, "rw").getChannel();
-        } catch (FileNotFoundException e) {
-            return false;
-        }
+        } catch (FileNotFoundException e) { return false;}
 
-        //mapeia para memória o conteúdo do ficheiro
+        // mapeia para memória o conteúdo do ficheiro
         try {
             buffer = canal.map(FileChannel.MapMode.READ_WRITE, 0, BUFFER_MAX);
-
-        } catch (IOException e) {
-            return false;
-        }
+        } catch (IOException e) { return false;}
 
         return true;
 
     }
 
-
     /*
      * recebe uma mensagem convertendo-a numa String
      */
     public String receberMensagem() {
-        String msg = new String();
-        buffer.position(0);
-        char c = buffer.getChar();
-        while (c != '\0') {
-            msg += c;
-        }
-        return msg;
+        if (this.ficheiro != null) {
+            String msg = new String();
+            try{
+                lock = canal.lock();
+                buffer.position(0);
+                char c = buffer.getChar();
+                while (c != '\0') {
+                    msg += c;
+                }
+                return msg;
+            } catch (Exception e) {
+                // System.out.println("Erro ao receber mensagem -> " + e.getMessage());
+                try {
+                    lock.release();
+                } catch (IOException e1) {
+                    // e1.printStackTrace();
+                }
+                return null;
+            }
+        } return null;
     }
 
 
@@ -130,6 +150,21 @@ public class CanalComunicacao {
             } catch (Exception e) {
                 canal = null;
             }
+        }
+    }
+
+    public void updateCanal(){
+        try{
+            lock = canal.lock();
+            buffer.position(0);
+            if (buffer.getChar() == 'r')
+                this.canWrite = true;
+            else
+                this.canWrite = false;
+            this.currentID = buffer.getInt();
+            lock.release();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

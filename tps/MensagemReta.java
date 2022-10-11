@@ -30,7 +30,7 @@ public class MensagemReta extends Mensagem {
 
     @Override
     public int[] obterMensagem() {
-        return new int[]{getIDMensagem(), getType(), getdistancia(), 0};
+        return new int[]{getID(), getType(), getdistancia(), 0};
     }
 
 }

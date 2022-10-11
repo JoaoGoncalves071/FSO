@@ -2,7 +2,6 @@ package tps;
 
 public abstract class Mensagem {
     private int ID;
-    private int type;
 
     public static final int TypeReta = 1;
     public static final int TypePara = 2;
@@ -10,12 +9,8 @@ public abstract class Mensagem {
     public static final int TypeCurvaEsquerda = 4;
 
 
-    public Mensagem(int type) {
-        this.type = type;
-    }
-
-    public int getType(){
-        return this.type;
+    public Mensagem() {
+        this.ID = ID;
     }
 
     public void setID(int novoID) {
@@ -23,8 +18,9 @@ public abstract class Mensagem {
     }
 
     public int getID() {
-        return this.ID;
+        return ID;
     }
+
 
     public abstract int[] obterMensagem();
 

@@ -40,7 +40,7 @@ public class MensagemCurvaEsquerda extends Mensagem {
 
     @Override
     public int[] obterMensagem() {
-        return new int[]{getIDMensagem(), getType(), getRaio(), getGrau()};
+        return new int[]{getID(), getType(), getRaio(), getGrau()};
     }
 
 }
