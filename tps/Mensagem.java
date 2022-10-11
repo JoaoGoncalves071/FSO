@@ -3,29 +3,31 @@ package tps;
 public abstract class Mensagem {
     private int ID;
 
-    private int tipo;
+    public static final int TypeReta = 1;
+    public static final int TypePara = 2;
+    public static final int TypeCurvaDireita = 3;
+    public static final int TypeCurvaEsquerda = 4;
 
-    private static final int TypeReta = 1;
-    private static final int TypeCurvaDireita=2;
-    private static final int TypeCurvaEsquerda = 3;
-    private static final int TypePara=4;
 
-    public Mensagem(int tipo){
-        this.tipo = tipo;
+    public Mensagem() {
+        this.ID = ID;
     }
-    public int getIDMensagem(){
-        return ID;
-    }
-    public int getType(){
-        return tipo;
-    }
-    public void setID(int novoID){
+
+    public void setID(int novoID) {
         this.ID = novoID;
     }
-    public String toString(){
-        return "ID: "+ID+" Tipo: "+tipo+ " Mensagem: ";
+
+    public int getIDMensagem() {
+        return ID;
     }
 
+
+    public abstract int[] obterMensagem();
+
+    public String toString() {
+        return "id: " + obterMensagem()[0] + ", tipo: " + obterMensagem()[1] + ", valor: " + obterMensagem()[2] + ", " + obterMensagem()[3];
+
+    }
 
 
 }
