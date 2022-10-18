@@ -153,6 +153,7 @@ public class CanalComunicacao {
         }
     }
 
+
     /*
      * fecha o canal de comunicação
      */
