@@ -1,16 +1,15 @@
 package tps;
 
-import robot.RobotLegoEV3;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Scanner;
 
 public class GUIConsole {
+
+    private Servidor servidor = new Servidor();
 
     private JFrame frame;
 
@@ -31,18 +30,10 @@ public class GUIConsole {
 
     private JTextArea consolePanel;
 
-    private RobotLegoEV3 robot;
-    private String robotName;
-    private int robotDistance;
-    private int robotDegree;
-    private int robotRadius;
-
-
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
-        Scanner keyboard = new Scanner(System.in);
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -60,15 +51,10 @@ public class GUIConsole {
     private void myInitialize() {
         //inicialização predefinida
         this.frame.setVisible(true);
-        this.robot = new RobotLegoEV3();
-        this.robotName = "EV2";
-        this.robotDistance = 20;
-        this.robotDegree = 90;
-        this.robotRadius = 0;
-        this.nameVal.setText(robotName);
     }
 
-    private void SetupName() {
+    //OLD VERSION
+    /*private void SetupName() {
         //Atribuir Nome e consecutivas prints
         this.robotName = this.nameVal.getText();
         consolePrint("Name inserted = ", robotName);
@@ -120,13 +106,13 @@ public class GUIConsole {
         //mover para a direita
         this.robot.CurvarDireita(robotRadius, robotDegree);
         this.robot.Parar(false);
-    }
+    }*/
 
     private void CloseWindow() {
-        //Fechat instataneamente o robo e fechar a consola
-        this.robot.Parar(true);
+        //Fechar instataneamente o robt e fechar a consola
+        servidor.Stop();
         consolePrint("Shutting Down...");
-        this.robot.CloseEV3();
+        servidor.Close();
     }
 
 
@@ -201,7 +187,9 @@ public class GUIConsole {
         nameVal.setBounds(184, 14, 86, 20);
         nameVal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetupName();
+                servidor.setName(nameVal.getText());
+                consolePrint("Name inserted = ", servidor.getName());
+                servidor.Open();
             }
         });
         frame.getContentPane().add(nameVal);
@@ -225,7 +213,8 @@ public class GUIConsole {
         radiusVal.setBounds(81, 56, 46, 20);
         radiusVal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetupRadius();
+                servidor.setRadius(Integer.parseInt(radiusVal.getText()));
+                consolePrint("Radius value = ", servidor.getRadius());
             }
         });
         frame.getContentPane().add(radiusVal);
@@ -241,7 +230,8 @@ public class GUIConsole {
         angleVal.setBounds(226, 56, 46, 20);
         angleVal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetupAngle();
+                servidor.setAngle(Integer.parseInt(angleVal.getText()));
+                consolePrint("Angle value = ", servidor.getAngle());
             }
         });
         frame.getContentPane().add(angleVal);
@@ -257,7 +247,8 @@ public class GUIConsole {
         distVal.setBounds(386, 56, 46, 20);
         distVal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetupDistance();
+                servidor.setDist(Integer.parseInt(distVal.getText()));
+                consolePrint("Distance value = ", servidor.getDist());
             }
         });
         frame.getContentPane().add(distVal);
@@ -267,7 +258,7 @@ public class GUIConsole {
         forwardButton.setEnabled(false);
         forwardButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                moveForward();
+                servidor.moveForward();
                 consolePrint("Going Forward...");
             }
         });
@@ -278,7 +269,7 @@ public class GUIConsole {
         stopButton.setEnabled(false);
         stopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Stop();
+                servidor.Stop();
                 consolePrint("Stopping...");
             }
         });
@@ -289,7 +280,7 @@ public class GUIConsole {
         backwardButton.setEnabled(false);
         backwardButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                moveBackwards();
+                servidor.moveBackwards();
                 consolePrint("Going Backwards...");
             }
         });
@@ -300,7 +291,7 @@ public class GUIConsole {
         leftButton.setEnabled(false);
         leftButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                moveLeft();
+                servidor.moveLeft();
                 consolePrint("Going Left...");
             }
         });
@@ -311,7 +302,7 @@ public class GUIConsole {
         rightButton.setEnabled(false);
         rightButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                moveRight();
+                servidor.moveRight();
                 consolePrint("Going Right...");
             }
         });
@@ -374,7 +365,7 @@ public class GUIConsole {
                     SetState(true);
                 } else {
                     //Fecha a conexão do Robot assim como os botões da Consola
-                    robot.CloseEV3();
+                    servidor.Close();
                     consolePrint("Robot OFFLINE");
                     SetState(false);
                     consolePrint("Console OFFLINE");
