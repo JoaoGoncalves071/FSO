@@ -2,7 +2,7 @@ package tps;
 
 public class Recetor {
 
-    private CanalComunicacao canal;
+    private final CanalComunicacao canal;
 
     public Recetor(String[] args) {
         canal = new CanalComunicacao();
@@ -20,7 +20,7 @@ public class Recetor {
         String lastValidMessage = "";
 
         for(;;) {
-            String currentMessage = this.canal.receberMensagem();
+            String currentMessage = String.valueOf(this.canal.receberMensagem());
             int aux = currentMessage.compareTo( lastValidMessage);
 
             if(aux!=0) {

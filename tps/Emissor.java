@@ -3,8 +3,8 @@ package tps;
 import java.util.Random;
 
 public class Emissor {
-    private CanalComunicacao canal;
-    private Random rnd;
+    private final CanalComunicacao canal;
+    private final Random rnd;
     private Mensagem msg;
 
 

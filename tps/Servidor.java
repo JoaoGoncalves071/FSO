@@ -8,7 +8,7 @@ public class Servidor {
     private int radius;
     private int dist;
 
-    private RobotLegoEV3 robot = new RobotLegoEV3();
+    private final RobotLegoEV3 robot = new RobotLegoEV3();
 
     //public void Servidor(){}
 

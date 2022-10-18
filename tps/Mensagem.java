@@ -4,9 +4,9 @@ public abstract class Mensagem {
     private int ID;
 
     public static final int TypeReta = 1;
-    public static final int TypePara = 2;
-    public static final int TypeCurvaDireita = 3;
-    public static final int TypeCurvaEsquerda = 4;
+    public static final int TypePara = TypeReta+1;
+    public static final int TypeCurvaDireita = TypePara+1;
+    public static final int TypeCurvaEsquerda = TypeCurvaDireita+1;
 
 
     public Mensagem() {
