@@ -1,36 +1,30 @@
 package tps;
 
+import java.util.Objects;
+
 public class Recetor {
 
     private final CanalComunicacao canal;
 
     public Recetor(String[] args) {
         canal = new CanalComunicacao();
-        this.canal.abrirCanal();
+        this.canal.abrirCanal(args[0]);
     }
 
     public static void main(String[] args) {
-        Recetor r = new Recetor( args );
+        Recetor r = new Recetor(args);
         System.out.println("RecetorLocks a funcionar...");
         r.run();
 
     }
 
     private void run() {
-        String lastValidMessage = "";
-
         for(;;) {
-            String currentMessage = String.valueOf(this.canal.receberMensagem());
-            int aux = currentMessage.compareTo( lastValidMessage);
-
-            if(aux!=0) {
-                System.out.println( currentMessage);
-
-                lastValidMessage = currentMessage;
-            }
-
-
+            //Obter a mensagem que foi enviada para o buffer
+           Mensagem msgRecebido = this.canal.receberMensagem();
+           if(Objects.nonNull(msgRecebido)) {
+               System.out.println(msgRecebido.toString());
+           }
         }
-
     }
 }

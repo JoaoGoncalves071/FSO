@@ -47,10 +47,9 @@ public class CanalComunicacao {
     /*
      * Método que abre canal de comunicacao
      */
-    public boolean abrirCanal() {
+    public boolean abrirCanal(String pathname) {
         // cria um ficheiro com o nome comunicacao.dat
-        this.ficheiro = new File("comunicacao.dat");
-
+        this.ficheiro = new File(pathname);
 
         try {
             canal = new RandomAccessFile(ficheiro, "rw").getChannel();
@@ -132,18 +131,24 @@ public class CanalComunicacao {
                 // A primeira a sair corresponde à que incrementa de 1 ID da ùltima mensagem no buffer
                 while(this.lastID < 10){
                     this.lock = this.canal.lock();
-                    buffer.position(0);
+                    //buffer.position(0); --- antigo
+                    this.buffer.position(id);
+                    for(int i=0; i<mensagem.length;i++){
+                        this.buffer.putInt(i);
+                    }
                     this.lastID = id;
                     this.lock.release();
                 }
+                /* antigo
                 this.lock = this.canal.lock();
-
                 //Começar a escrever no buffer a Mensagem
                 this.buffer.position(0);
                 for(int i=0; i<mensagem.length;i++){
                     this.buffer.putInt(i);
                 }
                 this.lock.release();
+
+                 */
 
                 System.out.println("Mensagem Enviada ----> "+ msg.toString());
             }

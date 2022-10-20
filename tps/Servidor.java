@@ -84,4 +84,6 @@ public class Servidor {
     public void Close() {
         this.robot.CloseEV3();
     }
+
+
 }
