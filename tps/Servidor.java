@@ -10,8 +10,6 @@ public class Servidor {
 
     private final RobotLegoEV3 robot = new RobotLegoEV3();
 
-    //public void Servidor(){}
-
     //Name
     public void setName(String name){
         this.name = name;
@@ -73,7 +71,7 @@ public class Servidor {
     }
 
     public void Stop() {
-        //Parar robo
+        //Parar robot
         this.robot.Parar(true);
     }
 
@@ -84,4 +82,5 @@ public class Servidor {
     public void Close() {
         this.robot.CloseEV3();
     }
+
 }

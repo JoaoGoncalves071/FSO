@@ -44,69 +44,12 @@ public class GUIConsole {
                 }
             }
         });
-
-
     }
 
     private void myInitialize() {
         //inicialização predefinida
         this.frame.setVisible(true);
     }
-
-    //OLD VERSION
-    /*private void SetupName() {
-        //Atribuir Nome e consecutivas prints
-        this.robotName = this.nameVal.getText();
-        consolePrint("Name inserted = ", robotName);
-        this.robot.OpenEV3(robotName);
-    }
-
-    private void SetupAngle() {
-        //Atribuir angulo e consecutivas prints
-        this.robotDegree = Integer.parseInt(angleVal.getText());
-        consolePrint("Angle value = ", this.robotDegree);
-    }
-
-    private void SetupRadius() {
-        //Atribuir raio e consecutivas prints
-        this.robotRadius = Integer.parseInt(radiusVal.getText());
-        consolePrint("Radius value = ", robotRadius);
-    }
-
-    private void SetupDistance() {
-        //Atribuir distancia e consecutivas prints
-        this.robotDistance = Integer.parseInt(distVal.getText());
-        consolePrint("Distance value = ", robotDistance);
-    }
-
-    private void moveForward() {
-        //mover robo para frente
-        this.robot.Reta(robotDistance);
-        this.robot.Parar(false);
-    }
-
-    private void moveBackwards() {
-        //mover robo para trás
-        this.robot.Reta(robotDistance * -1);
-        this.robot.Parar(false);
-    }
-
-    private void Stop() {
-        //Parar robo
-        this.robot.Parar(true);
-    }
-
-    private void moveLeft() {
-        //Mover para a esquerda
-        this.robot.CurvarEsquerda(robotRadius, robotDegree);
-        this.robot.Parar(false);
-    }
-
-    private void moveRight() {
-        //mover para a direita
-        this.robot.CurvarDireita(robotRadius, robotDegree);
-        this.robot.Parar(false);
-    }*/
 
     private void CloseWindow() {
         //Fechar instataneamente o robt e fechar a consola
