@@ -2,21 +2,21 @@ package tps;
 
 public class MensagemReta extends Mensagem {
     private int distancia;
-    private int tipo;
+    //private int tipo;
 
     public MensagemReta(int distancia) {
-        super();
-        this.tipo = TypeReta;
+        super(Mensagem.TypeReta);
+        //this.tipo = TypeReta;
         this.distancia = distancia;
     }
 
-    public void setType(int tipo) {
+/*    public void setType(int tipo) {
         this.tipo = tipo;
-    }
+    }*/
 
-    public int getType() {
+/*    public int getType() {
         return tipo;
-    }
+    }*/
 
     public void setdistancia(int distancia) {
         this.distancia = distancia;

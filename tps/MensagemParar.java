@@ -2,12 +2,11 @@ package tps;
 
 public class MensagemParar extends Mensagem {
     private boolean valor;
-    private int tipo;
+    //private int tipo;
 
 
     public MensagemParar(boolean valor) {
-        super();
-        this.tipo = TypePara;
+        super(Mensagem.TypePara);
         this.valor = valor;
     }
 
@@ -15,27 +14,31 @@ public class MensagemParar extends Mensagem {
         return valor ? 1 : 0;
     }
 
-    public void setType(int tipo) {
+/*    public void setType(int tipo) {
         this.tipo = tipo;
-    }
+    }*/
 
-    public int getType() {
+/*    public int getType() {
         return tipo;
-    }
+    }*/
 
     public void setValor(boolean valor) {
         this.valor = valor;
 
     }
 
-    public int getValor() {
+    public boolean getValor() {
+        return this.valor;
+    }
+
+    public int getValorInt() {
         return BoolToInt(this.valor);
 
     }
 
     @Override
     public int[] obterMensagem() {
-        return new int[]{getID(), getType(), getValor(), 0};
+        return new int[]{getID(), getType(), getValorInt(), 0};
     }
 
 

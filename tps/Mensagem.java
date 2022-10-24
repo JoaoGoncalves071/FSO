@@ -3,14 +3,17 @@ package tps;
 public abstract class Mensagem {
     private int ID;
 
+    private int tipo;
     public static final int TypeReta = 1;
     public static final int TypePara = TypeReta+1;
     public static final int TypeCurvaDireita = TypePara+1;
     public static final int TypeCurvaEsquerda = TypeCurvaDireita+1;
 
 
-    public Mensagem() {
+    public Mensagem(int tipo) {
+        this.tipo = tipo;
         this.ID = ID;
+
     }
 
     public void setID(int novoID) {
@@ -30,4 +33,7 @@ public abstract class Mensagem {
     }
 
 
+    public int getType() {
+        return this.tipo;
+    }
 }

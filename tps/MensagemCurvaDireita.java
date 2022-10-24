@@ -4,19 +4,18 @@ public class MensagemCurvaDireita extends Mensagem {
 
     public int raio;
     public int grau;
-    public int tipo; //= Mensagem.TypeCurvaDireita;
+    //public int tipo; //= Mensagem.TypeCurvaDireita;
 
     public MensagemCurvaDireita(int raio, int grau) {
-        super();
-        this.tipo = TypeCurvaDireita;
+        super(Mensagem.TypeCurvaDireita);
         this.raio = raio;
         this.grau = grau;
 
     }
 
-    public void setType(int tipo) {
+    /*public void setType(int tipo) {
         this.tipo = tipo;
-    }
+    }*/
 
     public void setRaio(int raio) {
         this.raio = raio;
@@ -26,21 +25,21 @@ public class MensagemCurvaDireita extends Mensagem {
         this.grau = grau;
     }
 
-    public int getType() {
-        return tipo;
-    }
+    /*public int getType() {
+        return Mensagem.TypeCurvaDireita;
+    }*/
 
     public int getRaio() {
         return raio;
     }
 
-    public int getGrau() {
+    public int getAngulo() {
         return grau;
     }
 
     @Override
     public int[] obterMensagem() {
-        return new int[]{getID(), getType(), getRaio(), getGrau()};
+        return new int[]{getID(), getType(), getRaio(), getAngulo()};
     }
 
 }

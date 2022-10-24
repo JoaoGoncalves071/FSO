@@ -1,7 +1,5 @@
 package tps;
 
-import jdk.internal.org.objectweb.asm.TypeReference;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,6 +28,9 @@ public class CanalComunicacao {
     private int currentID;
     private int lastID;
 
+    // Indica se o canal está aberto
+    private boolean canalOpen;
+
     // Indica se se pode escrever
     private boolean canWrite;
 
@@ -42,6 +43,7 @@ public class CanalComunicacao {
         lock = null;
         canal = null;
         buffer = null;
+        canalOpen = false;
     }
 
     /*
@@ -53,6 +55,7 @@ public class CanalComunicacao {
 
         try {
             canal = new RandomAccessFile(ficheiro, "rw").getChannel();
+            this.canalOpen = true;
             System.out.println("Channel Open!");
 
         } catch (FileNotFoundException e) {
@@ -173,4 +176,7 @@ public class CanalComunicacao {
     }
 
 
+    public boolean isCanalOpen() {
+        return canalOpen;
+    }
 }
