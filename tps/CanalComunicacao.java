@@ -1,12 +1,17 @@
 package tps;
 
+import jdk.internal.org.objectweb.asm.TypeReference;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Array;
+import java.nio.Buffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.IllformedLocaleException;
 
 public class CanalComunicacao {
     //ficheiro
@@ -17,6 +22,7 @@ public class CanalComunicacao {
 
     //cadeado do canal
     private FileLock lock;
+    private int[] ArrayPosicoes = {6,12,18,24};
 
     //buffer
     private MappedByteBuffer buffer;
@@ -27,9 +33,6 @@ public class CanalComunicacao {
     // Variáveis auxiliares ao ID
     private int currentID;
     private int lastID;
-
-    // Indica se o canal está aberto
-    private boolean canalOpen;
 
     // Indica se se pode escrever
     private boolean canWrite;
@@ -43,7 +46,6 @@ public class CanalComunicacao {
         lock = null;
         canal = null;
         buffer = null;
-        canalOpen = false;
     }
 
     /*
@@ -55,7 +57,6 @@ public class CanalComunicacao {
 
         try {
             canal = new RandomAccessFile(ficheiro, "rw").getChannel();
-            this.canalOpen = true;
             System.out.println("Channel Open!");
 
         } catch (FileNotFoundException e) {
@@ -76,90 +77,136 @@ public class CanalComunicacao {
      * Receber uma mensagem do Buffer
      */
     public Mensagem receberMensagem() {
-        if(this.ficheiro!=null){
+		FileLock f1 = null;
+		Mensagem res = null;
             try{
-                this.lock = this.canal.lock();
-
+                f1 = this.canal.lock();
+                //System.out.println("Espera....");
+                
                 buffer.position(0);
-                int ID = buffer.getInt(0);
-                int Type = buffer.getInt(1);
-                int val1 = buffer.getInt(2);
-                int val2 = buffer.getInt(3);
-
-                Mensagem msg;
-
-                switch (Type) {
-                    case Mensagem.TypeReta:
-                        msg = new MensagemReta(val1);
-                        msg.setID(ID);
-                        return msg;
-
-                    case Mensagem.TypePara:
-                        boolean val = (val1 == 1) ? true : false;
-                        msg = new MensagemParar(val);
-                        msg.setID(ID);
-                        return msg;
-
-                    case Mensagem.TypeCurvaDireita:
-                        msg = new MensagemCurvaDireita(val1, val2);
-                        msg.setID(ID);
-                        return msg;
-
-                    case Mensagem.TypeCurvaEsquerda:
-                        msg = new MensagemCurvaEsquerda(val1, val2);
-                        msg.setID(ID);
-                        return msg;
+                
+                int num = buffer.getShort();
+                if(num == 0) {
+                	return res;
                 }
-            } catch (Exception e){
-                System.out.println("Erro ao receber mensagem -> " + e.getMessage());
+                buffer.position(4);
+                int idget = buffer.getShort();
+                
+                buffer.position(idget);
+                int Type = buffer.getShort();
+                int val1 = buffer.getShort();
+                int val2 = buffer.getShort();
+                
+                //Mensagem msg;
+                switch (Type) {
+                    case (Mensagem.TypeReta):
+                        res = new MensagemReta(val1);
+                        break;
+                    case (Mensagem.TypePara):
+                        boolean val = (val1 == 1) ? true : false;
+                        res= new MensagemParar(val);
+                        break;
+                    case (Mensagem.TypeCurvaDireita):
+                        res = new MensagemCurvaDireita(val1, val2);
+                        break;
+                    case (Mensagem.TypeCurvaEsquerda):
+                        res = new MensagemCurvaEsquerda(val1, val2);
+                        break;
+                    default:
+        				System.out.println("MENSAGEM INEXISTENTE");
+            
+                }
+                
+                //atualizar o numero da mensagem
+                num-=1;
+                buffer.position(0);
+                buffer.putShort((short)num);
+                
+                //atualizar idGet
+                if(idget>=24) {
+                	idget=6;
+                }else {
+                	idget = idget+6;
+                }
+                buffer.position(4);
+                buffer.putShort((short)idget);
+                return res;
+            } catch (IOException e){
+                throw new IllegalArgumentException("Erro ao fazer lock");
+            }finally {
+            	if(f1 != null) {
+            		try {
+            			f1.release();
+            		}catch (IOException e) {
+						throw new IllegalArgumentException("Erro ao fazer unlock");
+					}
+            	}
             }
-        }
-        return null;
     }
 
 
     /*
      * Enviae uma Mesagem para o Buffer
      */
-    public void enviarMensagem(Mensagem msg)  {
-        if(this.ficheiro != null) {
-            try {
-                // Obter as varias infos do obterMensagem - (ID,type,value(radius,angle))
-                int[] mensagem = msg.obterMensagem();
-                int id = mensagem[0];
-                id++;
-                msg.setID(id);
+    public boolean enviarMensagem(Mensagem msg)  {
+    		FileLock f1 = null;
+    		try {
+    			f1 = this.canal.lock();
+    			System.out.println("A espera...");
+    			buffer.position(0);
+    			
+    			System.out.println("A escrever");
+    			
+    			//ler pos para escrever
+    			buffer.position(2);
+    			int pos = buffer.getShort();
+    			int[] mensagem = msg.obterMensagem();
+    			
+    			int val = mensagem[0];
+    			
+    			if(val>=4) {//mudar dependento do numero do grupo
+    				System.out.println("Canal cheio");
+    				return false;
+    			}
+    			
+    		
+    			buffer.position(pos);
+    			buffer.putShort((short)mensagem[1]);//tipo
+    			buffer.putShort((short)mensagem[2]);//val1
+    			buffer.putShort((short)mensagem[3]);//val2
+    			val+=1;
 
-                // As mensagens têm de ficar à espera, de forma ordenada, enquanto a mensagem previamente escrita ainda não tiver sido lida
-                // A primeira a sair corresponde à que incrementa de 1 ID da ùltima mensagem no buffer
-                while(this.lastID < 10){
-                    this.lock = this.canal.lock();
-                    //buffer.position(0); --- antigo
-                    this.buffer.position(id);
-                    for(int i=0; i<mensagem.length;i++){
-                        this.buffer.putInt(i);
-                    }
-                    this.lastID = id;
-                    this.lock.release();
-                }
-                /* antigo
-                this.lock = this.canal.lock();
-                //Começar a escrever no buffer a Mensagem
-                this.buffer.position(0);
-                for(int i=0; i<mensagem.length;i++){
-                    this.buffer.putInt(i);
-                }
-                this.lock.release();
+    			System.out.println(msg.toString()+ " na posição " + pos);
+    			//atualizar o numero de mensagens
+    			buffer.position(0);
+    			buffer.putShort((short)val);
+    			
+    			//Atualizar id
+    			if(pos >= 24) {
+    				pos = ArrayPosicoes[0];
+    			}else {
+    				pos = pos+6;
+    			}
+    			buffer.putShort((short)pos);
+    			
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			throw new IllegalArgumentException("Erro a fazer lock");
+    		}finally {
+    			if(f1!=null) {
+    				try {
+    					f1.release();
+    				}catch (Exception e) {
+						throw new IllformedLocaleException("Erro a fazer unlock");
+					}
+    			}
+    		}
+    		return true;
+    		
+    	}
+        
 
-                 */
 
-                System.out.println("Mensagem Enviada ----> "+ msg.toString());
-            }
-            catch (Exception e){
-                System.out.println(e.getMessage());
-            }
-        }
-    }
 
 
     /*
@@ -176,7 +223,4 @@ public class CanalComunicacao {
     }
 
 
-    public boolean isCanalOpen() {
-        return canalOpen;
-    }
 }
