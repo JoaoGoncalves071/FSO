@@ -3,7 +3,7 @@ package tps;
 import java.util.Random;
 
 public class Emissor {
-    private final CanalComunicacao channel;
+    private final CanalComunicacaoMensagens canal;
     private final Random rnd;
     private Mensagem msg;
 
@@ -19,20 +19,26 @@ public class Emissor {
 
     public Emissor(String[] args) {
         this.rnd = new Random();
-        this.channel = this.getCanal();
-        this.channel.abrirCanal(args[0]);
-        this.promptMSG = args[1];
+        this.canal = this.getCanal();
+        this.canal.abrirCanal(args[0]);
+        //this.promptMSG = args[1];
     }
 
-    private CanalComunicacao getCanal() {
-        return new CanalComunicacao();
+    private CanalComunicacaoMensagens getCanal() {
+        CanalComunicacaoMensagens channel = new CanalComunicacaoMensagens();
+        return channel;
     }
 
     public void run() {
-
+        int pos = 0;
         for(int i=0;; ++i) {
-            this.msg = new MensagemReta(i);
-            this.channel.enviarMensagem(this.msg);
+            this.msg = new MensagemCurvaEsquerda((short) 30,(short) 20 ,(short) i);
+            boolean res;
+            do {
+                res = this.canal.enviarMensagem(this.msg);
+            }while(!res);
+            //this.msg.setID(i);
+            //his.canal.enviarMensagem(this.msg);
             try {
                 Thread.sleep(450 + rnd.nextInt(750));
             }catch(InterruptedException e){

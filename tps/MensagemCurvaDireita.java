@@ -19,7 +19,7 @@ public class MensagemCurvaDireita extends Mensagem {
 
     @Override
     public String toString() {
-        return "Curva Direita com Raio: "+ getRaio() + " e Angulo: " + getAngulo() + " id: " + Integer.toString(super.getid());
+        return "Curva Direita com Raio: "+ getRaio() + " e Angulo: " + getAngulo() + " id: " + Integer.toString(super.getID());
     }
 
 }

@@ -30,12 +30,12 @@ public class CanalComunicacaoMensagens extends CanalComunicacao {
             int pos = buffer.getShort();
 
             buffer.position(pos);
-            buffer.putShort(msg.getTipo());
+            buffer.putShort(msg.getType());
             buffer.putShort(msg.getParam1());
             buffer.putShort(msg.getParam2());
             numM+=1;
 
-            System.out.println("Mensagem "+ (int)msg.getTipo() + ", " + (int)msg.getParam1() +", "+ (int)msg.getParam2()+ " written in position: " + pos);
+            System.out.println("Mensagem "+ (int)msg.getType() + ", " + (int)msg.getParam1() +", "+ (int)msg.getParam2()+ " written in position: " + pos);
 
             //atualizar numero de mensagens
             buffer.position(0);

@@ -3,9 +3,9 @@ package tps;
 public abstract class Mensagem {
 
     public static final short TypeReta = 0;
-    public static final short TypePara = TypeReta+1;
-    public static final short TypeCurvaDireita = TypePara+1;
-    public static final short TypeCurvaEsquerda = TypeCurvaDireita+1;
+    public static final short  TypeCurvaEsquerda= TypeReta+1;
+    public static final short TypeCurvaDireita = TypeCurvaEsquerda+1;
+    public static final short TypePara = TypeCurvaDireita+1;
 
     private short mensagemParam1;
     private short mensagemParam2;
@@ -20,7 +20,7 @@ public abstract class Mensagem {
         this.ID = ID;
     }
 
-    public short getTipo() {
+    public short getType() {
         return mensagemTipo;
     }
 
@@ -30,11 +30,8 @@ public abstract class Mensagem {
     public short getParam2() {
         return mensagemParam2;
     }
-    public short getid() {
-        return ID;
-    }
 
-    public short setTipo(short tipo) {
+    public short setType(short tipo) {
         tipo = this.mensagemTipo;
         return tipo;
     }
@@ -49,15 +46,19 @@ public abstract class Mensagem {
         return param2;
     }
 
-    public short id(short ID) {
-        ID = this.ID;
-        return ID;
+    public short getID() {
+        return this.ID;
+    }
+
+    public void setID(short ID) {
+        this.ID = ID;
     }
 
     public String toString() {
         return "Mensagem do tipo: " + Integer.toString(mensagemTipo) + ",com Param1 =  " + Integer.toString(mensagemParam1)+
                 "e Param2 = " + Integer.toString(mensagemParam2) + " e id = " + Integer.toString(ID);
     }
+    
 
 	/*public boolean compareTo(Mensagem msg) {
 		if(this.mensagemTipo == msg.mensagemTipo && this.mensagemParam1 == msg.mensagemParam1 && this.mensagemParam2 == msg.mensagemParam2) {

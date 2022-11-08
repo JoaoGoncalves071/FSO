@@ -11,8 +11,8 @@ public class Servidor implements Runnable{
     private int radius;
     private int dist;
 
-    private CanalComunicacao cc = new CanalComunicacao();
-    private RobotLegoEV3 robot = new RobotLegoEV3();
+    private CanalComunicacaoMensagens cc;
+    private RobotLegoEV3 robot;
 
     private boolean robotOpen;
 
@@ -30,8 +30,8 @@ public class Servidor implements Runnable{
      * As variáveis dentro do método queremos que voltem ao seu valor "inicial"
      * sempre que for chamado o construtor
      */
-    public Servidor(CanalComunicacao cc, boolean isExe) {
-        this.cc = new CanalComunicacao();
+    public Servidor() {
+        this.cc = new CanalComunicacaoMensagens();
         this.robot = new RobotLegoEV3();
         this.robotOpen = false;
         this.isExe = false;
@@ -91,21 +91,21 @@ public class Servidor implements Runnable{
         //mover robot para frente
         robot.Reta(getDist());
         robot.Parar(false);
-        MensagemReta msg = new MensagemReta((short) getDist());
+        MensagemReta msg = new MensagemReta((short) getDist(),(short)0);
         cc.enviarMensagem(msg);
     }
     public void moveBackwards() {
         //mover robo para trás
         robot.Reta(getDist() * -1);
         robot.Parar(false);
-        MensagemReta msg = new MensagemReta((short) getDist() * -1);
+        MensagemReta msg = new MensagemReta((short) (getDist() * -1),(short) 0);
         cc.enviarMensagem(msg);
     }
     public void moveLeft() {
         //Mover para a esquerda
         robot.CurvarEsquerda(getRadius(), getAngle());
         robot.Parar(false);
-        MensagemCurvaEsquerda msg = new MensagemCurvaEsquerda((short) getRadius(), (short) getAngle());
+        MensagemCurvaEsquerda msg = new MensagemCurvaEsquerda((short) getRadius(), (short) getAngle(),(short) 0);
         cc.enviarMensagem(msg);
     }
 
@@ -113,22 +113,23 @@ public class Servidor implements Runnable{
         //mover para a direita
         robot.CurvarDireita(getRadius(), getAngle());
         robot.Parar(false);
-        MensagemCurvaDireita msg = new MensagemCurvaDireita((short) getRadius(), (short) getAngle());
+        MensagemCurvaDireita msg = new MensagemCurvaDireita((short) getRadius(), (short) getAngle(), (short) 0);
         cc.enviarMensagem(msg);
     }
 
     public void Stop() {
         //Parar robot
         robot.Parar(true);
-        MensagemParar msg = new MensagemParar(true);
+        MensagemParar msg = new MensagemParar((short) 1,(short) 0);
         cc.enviarMensagem(msg);
     }
 
     @Override
     public void run() {
+        cc.abrirCanal("teste.txt");
         for (;;){
             try{
-                Mensagem msgRecebida = cc.receberMensagem();
+                Mensagem msgRecebida = cc.receberMensagemM();
 
                 if (msgRecebida != null && cc.isCanalOpen()){
                     // TODO mensagem do tipo Acaba
@@ -144,9 +145,9 @@ public class Servidor implements Runnable{
 
                         case Mensagem.TypeReta:
                             MensagemReta msgReta = (MensagemReta) nextMensagem;
-                            this.robot.Reta(msgReta.getdistancia());
+                            this.robot.Reta(msgReta.getDistancia());
                             isExe = true;
-                            waitTime = (long) (Math.ceil(msgReta.getdistancia() / 30.0f) * 1000.0f);
+                            waitTime = (long) (Math.ceil(msgReta.getDistancia() / 30.0f) * 1000.0f);
                             beginWait = clk.millis();
                             break;
 
@@ -168,7 +169,7 @@ public class Servidor implements Runnable{
 
                         case Mensagem.TypePara:
                             MensagemParar msgPara = (MensagemParar) nextMensagem;
-                            this.robot.Parar(msgPara.getValor());
+                            this.robot.Parar(msgPara.getEstado() > 0);
                             isExe = true;
                             waitTime = (long) 500.0f;
                             beginWait = clk.millis();

@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
 
 public class GUIConsole {
 
-    private Servidor servidor = new Servidor();
+    private final Servidor servidor = new Servidor();
 
     private JFrame frame;
 
@@ -276,6 +276,7 @@ public class GUIConsole {
             public void actionPerformed(ActionEvent e) {
                 if (wanderCheckbox.isSelected()) {
                     consolePrint("Wandering...");
+
                 } else {
                     consolePrint("Stopping Wander mode...");
                 }

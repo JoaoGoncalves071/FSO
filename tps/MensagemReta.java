@@ -15,7 +15,7 @@ public class MensagemReta extends Mensagem {
 
     @Override
     public String toString() {
-        return "Reta: "+ this.getParam1() + " id: "+ Integer.toString(super.getid());
+        return "Reta: "+ this.getParam1() + " id: "+ Integer.toString(super.getID());
     }
 
 

@@ -23,12 +23,15 @@ public class CanalComunicacao {
     // protected máxima em bytes do buffer
     final int BUFFER_MAX = 55;
     // construtor onde se cria o canal
+
+    boolean open;
     public CanalComunicacao() {
 
         //Construtor
         ficheiro = null;
         canal = null;
         buffer = null;
+        open = false;
 
     }
 
@@ -41,6 +44,7 @@ public class CanalComunicacao {
         // cria um canal de comunica��o de leitura e escrita
         try {
             canal = new RandomAccessFile(ficheiro, "rw").getChannel();
+            this.open = true;
         } catch (FileNotFoundException e) {
             return false;
         }
@@ -99,6 +103,7 @@ public class CanalComunicacao {
         if (canal != null) {
             try {
                 canal.close();
+                this.open = false;
             } catch (Exception e) {
                 canal = null;
             }
@@ -106,4 +111,7 @@ public class CanalComunicacao {
     }
 
 
+    public boolean isCanalOpen() {
+        return this.open;
+    }
 }

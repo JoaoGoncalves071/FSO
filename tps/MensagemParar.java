@@ -14,7 +14,7 @@ public class MensagemParar extends Mensagem {
 
     @Override
     public String toString() {
-        return "Parado: "+ this.getParam1() + " id: " + Integer.toString(super.getid());
+        return "Parado: "+ this.getParam1() + " id: " + Integer.toString(super.getID());
     }
 
 

@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class Recetor {
 
-    private final CanalComunicacao canal;
+    private final CanalComunicacaoMensagens canal;
 
     public Recetor(String[] args) {
-        canal = new CanalComunicacao();
+        canal = new CanalComunicacaoMensagens();
         this.canal.abrirCanal(args[0]);
     }
 
@@ -19,12 +19,16 @@ public class Recetor {
     }
 
     private void run() {
-        for(;;) {
-            //Obter a mensagem que foi enviada para o buffer
-           Mensagem msgRecebido = this.canal.receberMensagem();
-           if(Objects.nonNull(msgRecebido)) {
-               System.out.println(msgRecebido.toString());
-           }
+        for (; ; ) {
+
+            Mensagem msgAtual = this.canal.receberMensagemM();
+            if (Objects.nonNull(msgAtual)) {
+                System.out.println(msgAtual.toString());
+
+            }
+
+
         }
+
     }
 }
