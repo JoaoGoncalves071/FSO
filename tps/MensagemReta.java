@@ -1,36 +1,24 @@
 package tps;
 
 public class MensagemReta extends Mensagem {
-    private int distancia;
-    //private int tipo;
+    private short distancia;
+    private short tipo;
 
-    public MensagemReta(int distancia) {
-        super(Mensagem.TypeReta);
-        //this.tipo = TypeReta;
-        this.distancia = distancia;
+    public MensagemReta(short distancia,short ID) {
+        super(Mensagem.TypeReta,distancia,(short)0, ID);
+        this.setParam1(distancia);
     }
 
-/*    public void setType(int tipo) {
-        this.tipo = tipo;
-    }*/
-
-/*    public int getType() {
-        return tipo;
-    }*/
-
-    public void setdistancia(int distancia) {
-        this.distancia = distancia;
-
-    }
-
-    public int getdistancia() {
-        return distancia;
-
+    public short getDistancia() {
+        return this.getParam1();
     }
 
     @Override
-    public int[] obterMensagem() {
-        return new int[]{getID(), getType(), getdistancia(), 0};
+    public String toString() {
+        return "Reta: "+ this.getParam1() + " id: "+ Integer.toString(super.getid());
     }
+
+
+
 
 }

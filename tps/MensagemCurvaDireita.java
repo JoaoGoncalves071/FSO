@@ -2,44 +2,24 @@ package tps;
 
 public class MensagemCurvaDireita extends Mensagem {
 
-    public int raio;
-    public int grau;
-    //public int tipo; //= Mensagem.TypeCurvaDireita;
+    public short raio;
+    public short grau;
+    public short tipo; //= Mensagem.TypeCurvaDireita;
 
-    public MensagemCurvaDireita(int raio, int grau) {
-        super(Mensagem.TypeCurvaDireita);
-        this.raio = raio;
-        this.grau = grau;
+    public MensagemCurvaDireita(short raio, short angulo, short ID) {
+        super(Mensagem.TypeCurvaDireita, raio, angulo, ID);
 
+    }public short getRaio() {
+        return this.getParam1();
     }
 
-    /*public void setType(int tipo) {
-        this.tipo = tipo;
-    }*/
-
-    public void setRaio(int raio) {
-        this.raio = raio;
-    }
-
-    public void setGrau(int grau) {
-        this.grau = grau;
-    }
-
-    /*public int getType() {
-        return Mensagem.TypeCurvaDireita;
-    }*/
-
-    public int getRaio() {
-        return raio;
-    }
-
-    public int getAngulo() {
-        return grau;
+    public short getAngulo() {
+        return this.getParam2();
     }
 
     @Override
-    public int[] obterMensagem() {
-        return new int[]{getID(), getType(), getRaio(), getAngulo()};
+    public String toString() {
+        return "Curva Direita com Raio: "+ getRaio() + " e Angulo: " + getAngulo() + " id: " + Integer.toString(super.getid());
     }
 
 }
